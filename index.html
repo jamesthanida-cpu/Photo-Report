@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Photo Survey Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f6fa;--card:#fff;--text:#1a2233;--muted:#667085;--line:#d5dbe6;--acc:#1d4ed8;--accfg:#fff;--danger:#c0392b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141c;--card:#1a212d;--text:#e8ecf3;--muted:#98a2b3;--line:#2e394a;--acc:#5b8cff;--accfg:#08111f;--danger:#ff7b6b}}
+:root[data-theme="dark"]{--bg:#10141c;--card:#1a212d;--text:#e8ecf3;--muted:#98a2b3;--line:#2e394a;--acc:#5b8cff;--accfg:#08111f;--danger:#ff7b6b}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Sarabun',system-ui,-apple-system,'Noto Sans Thai',sans-serif;font-size:16px;line-height:1.4}
+.wrap{max-width:640px;margin:0 auto;padding:14px 14px 110px}
+h1{font-size:20px;margin:6px 0 12px}
+h2{font-size:15px;margin:0 0 10px;color:var(--muted);font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
+label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
+input[type=text],select{width:100%;font:inherit;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text)}
+input[type=text]:focus,select:focus{outline:2px solid var(--acc);border-color:transparent}
+input[type=text]:disabled{opacity:.6}
+input[type=checkbox],input[type=radio]{width:20px;height:20px;accent-color:var(--acc);margin:0}
+.chk{display:flex;align-items:center;gap:8px;margin:10px 14px 0 0;color:var(--text);font-size:15px}
+.btn{font:inherit;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--text);padding:10px 14px;border-radius:10px;cursor:pointer}
+.btn.pri{background:var(--acc);color:var(--accfg);border-color:var(--acc)}
+.btn.del{color:var(--danger)}
+.btn:disabled{opacity:.55}
+label.btn{margin:0;color:var(--text);font-size:16px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row[hidden]{display:none}
+.row>.btn{flex:1;min-width:120px;text-align:center}
+.hint{color:var(--muted);font-size:13px;margin-top:8px}
+.li{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.li img{height:32px;width:72px;object-fit:contain}
+.li span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px}
+.li .btn{padding:6px 10px}
+.slot{border-top:1px solid var(--line);padding-top:10px;margin-top:12px}
+.slot:first-child{border:0;margin:0;padding:0}
+.logo-prev{height:56px;display:flex;align-items:center;margin:10px 0 2px}
+.logo-prev img{max-height:56px;max-width:100%}
+.logo-prev span{color:var(--muted);font-size:14px}
+.ph{aspect-ratio:425/419;border:2px solid var(--text);background:#fff center/contain no-repeat;display:flex;align-items:center;justify-content:center;color:#98a2b3;font-size:14px;margin-bottom:10px}
+.ph.has{color:transparent}
+.ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.ch b{font-size:15px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));z-index:5}
+.bar .in{max-width:640px;margin:0 auto;display:flex;gap:8px}
+.bar .btn{flex:1}
+#msg{max-width:640px;margin:6px auto 0;font-size:13px;color:var(--muted);text-align:center;min-height:18px}
+input[type=file]{display:none}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.ov[hidden]{display:none}
+.dlg{background:var(--card);color:var(--text);border-radius:16px;padding:18px;width:100%;max-width:420px;border:1px solid var(--line)}
+.dlg h3{margin:0 0 4px;font-size:18px}
+.nm{display:flex;align-items:center;gap:8px}
+.nm span{font-weight:600}
+#mmsg{min-height:20px;font-size:13px;color:var(--muted);margin:8px 0 10px}
+#stage{position:fixed;left:-12000px;top:0}
+.pg{width:924px;height:1306px;background:#fff;color:#000;position:relative;overflow:hidden;font-family:Calibri,Carlito,'Sarabun',Arial,sans-serif}
+.pg>div{position:absolute;box-sizing:border-box}
+.pg .tt{font-size:22px;font-weight:700;text-align:center;line-height:36px;white-space:nowrap}
+.pg .lb{font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:flex-end;white-space:nowrap}
+.pg .lb.n{font-weight:400}
+.pg .vl{color:#1f3a7a;border-bottom:1.5px solid #000;white-space:nowrap;overflow:hidden;display:flex;align-items:center;padding-bottom:1px}
+.pg .vl.h{font-size:14px}
+.pg .vl.c{font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📷 Photo Survey Report</h1>
+  <div class="card" id="inapp" hidden style="border-color:var(--danger)">
+    <b>เปิดจากในแอปอื่นอยู่</b>
+    <div class="hint" style="color:var(--text)">การบันทึกไฟล์ PDF อาจใช้ไม่ได้ แนะนำให้เปิดลิงก์นี้ใน Chrome (Android) หรือ Safari (iPhone) แทน</div>
+    <button class="btn" type="button" id="cpLink" style="width:100%;margin-top:10px">คัดลอกลิงก์</button>
+  </div>
+
+  <div class="card">
+    <h2>คลังโลโก้</h2>
+    <div id="lib"></div>
+    <div class="row" style="margin-top:10px"><label class="btn">＋ เพิ่มโลโก้เข้าคลัง<input type="file" accept="image/*" id="libIn" multiple></label></div>
+    <div class="hint">โลโก้ที่เพิ่มจะถูกเก็บไว้ในเบราว์เซอร์/เครื่องนี้ และเลือกใช้ซ้ำได้ครั้งต่อไป</div>
+  </div>
+
+  <div class="card">
+    <h2>โลโก้ในหัวเอกสาร</h2>
+    <div id="slots"></div>
+    <button class="btn" type="button" id="addSlot" style="width:100%;margin-top:12px">＋ เพิ่มโลโก้ถัดไป</button>
+  </div>
+
+  <div class="card">
+    <h2>ข้อมูลทั่วไป</h2>
+    <label>ชื่อหัวเอกสาร</label><input type="text" data-h="title">
+    <label>Project</label><input type="text" data-h="project">
+    <label>Station</label><input type="text" data-h="station">
+    <label>System</label><input type="text" data-h="system">
+    <label>Location</label><input type="text" data-h="location">
+  </div>
+
+  <div id="items"></div>
+  <button class="btn" type="button" id="add" style="width:100%">＋ เพิ่มรูปภาพ</button>
+</div>
+
+<div class="bar">
+  <div class="in"><button class="btn pri" id="exp" type="button">Export PDF</button></div>
+  <div id="msg"></div>
+</div>
+
+<div class="ov" id="modal" hidden>
+  <div class="dlg">
+    <h3>บันทึกไฟล์ PDF</h3>
+    <label for="fname">ตั้งชื่อไฟล์</label>
+    <div class="nm"><input type="text" id="fname" autocomplete="off"><span>.pdf</span></div>
+    <div id="mmsg"></div>
+    <div class="row" id="mRow1"><button class="btn" id="mCancel" type="button">ยกเลิก</button><button class="btn pri" id="mOk" type="button">บันทึก</button></div>
+    <div class="row" id="mRow2" hidden><button class="btn pri" id="mShare" type="button">แชร์ / บันทึกลงเครื่อง</button><button class="btn" id="mDl" type="button">ดาวน์โหลด</button><button class="btn" id="mClose" type="button">ปิด</button></div>
+  </div>
+</div>
+<div id="stage"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const LK='pr_logo_lib_v1',F=['desc','equip','serial'];
+const S={lib:[],slots:[{lid:'default-ww',pos:'L'}],h:{title:'Photo Servey Report',project:'',station:'',system:'',location:''},items:[]};
+try{S.lib=JSON.parse(localStorage.getItem(LK)||'[]')||[];}catch(_){S.lib=[];}
+const DEF=[{id:'default-ww',name:'Wire & Wireless Co., Ltd.',def:true,src:'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfNyIgZGF0YS1uYW1lPSJMYXllciA3IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMTc3OS44MSA4MzIuODkiPgogIDxkZWZzPgogICAgPHN0eWxlPgogICAgICAuY2xzLTEsIC5jbHMtMiB7CiAgICAgICAgZmlsbDogIzI5Mjk4NjsKICAgICAgfQoKICAgICAgLmNscy0zIHsKICAgICAgICBsZXR0ZXItc3BhY2luZzogLS4wM2VtOwogICAgICB9CgogICAgICAuY2xzLTQgewogICAgICAgIHN0cm9rZTogI2ZmZjsKICAgICAgICBzdHJva2Utd2lkdGg6IDdweDsKICAgICAgfQoKICAgICAgLmNscy00LCAuY2xzLTUgewogICAgICAgIGZpbGw6ICMyOTI5ODY7CiAgICAgIH0KCiAgICAgIC5jbHMtNCwgLmNscy0yIHsKICAgICAgICBzdHJva2UtbWl0ZXJsaW1pdDogMTA7CiAgICAgIH0KCiAgICAgIC5jbHMtNiB7CiAgICAgICAgbGV0dGVyLXNwYWNpbmc6IC0uMDRlbTsKICAgICAgfQoKICAgICAgLmNscy03IHsKICAgICAgICBmaWxsOiAjZmZmOwogICAgICB9CgogICAgICAuY2xzLTggewogICAgICAgIGZpbGw6IHVybCgjcmFkaWFsLWdyYWRpZW50KTsKICAgICAgfQoKICAgICAgLmNscy05IHsKICAgICAgICBjbGlwLXBhdGg6IHVybCgjY2xpcHBhdGgtMSk7CiAgICAgIH0KCiAgICAgIC5jbHMtMiB7CiAgICAgICAgZm9udC1mYW1pbHk6IEJlbGxNVEJvbGQsICdCZWxsIE1UJywgJ1RpbWVzIE5ldyBSb21hbicsIFRpbWVzLCBzZXJpZjsKICAgICAgICBmb250LXdlaWdodDogNzAwOwogICAgICAgIGZvbnQtc2l6ZTogMTU1Ljc2cHg7CiAgICAgICAgc3Ryb2tlOiAjMjkyOTg2OwogICAgICB9CgogICAgICAuY2xzLTEwIHsKICAgICAgICBsZXR0ZXItc3BhY2luZzogLS4wN2VtOwogICAgICB9CgogICAgICAuY2xzLTExIHsKICAgICAgICBsZXR0ZXItc3BhY2luZzogLS4wM2VtOwogICAgICB9CiAgICA8L3N0eWxlPgogICAgPHJhZGlhbEdyYWRpZW50IGlkPSJyYWRpYWwtZ3JhZGllbnQiIGN4PSIyMjEuODgiIGN5PSIxNzEuNiIgZng9IjIyMS44OCIgZnk9IjE3MS42IiByPSIxODAuMjEiIGdyYWRpZW50VHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTM0LjUzIC04OS43NCkgcm90YXRlKDM1LjE1KSBzY2FsZSgxIC45NSkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmNjZGJhIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iLjE1IiBzdG9wLWNvbG9yPSIjZmJjOGI2Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iLjMiIHN0b3AtY29sb3I9IiNmYWJjYWIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIuNDUiIHN0b3AtY29sb3I9IiNmOWE3OWEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIuNiIgc3RvcC1jb2xvcj0iI2Y2OGI4MSIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii43NiIgc3RvcC1jb2xvcj0iI2YzNjY2MiIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii45MSIgc3RvcC1jb2xvcj0iI2YwMzkzYiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlZTFjMjMiLz4KICAgIDwvcmFkaWFsR3JhZGllbnQ+CiAgICA8Y2xpcFBhdGggaWQ9ImNsaXBwYXRoLTEiPgogICAgICA8cGF0aCBjbGFzcz0iY2xzLTUiIGQ9Ik0xNzc5LjgxLDQwLjk1bC0yMDMuNTMsMzgzLjU4aC02MS42OWwtMzEuMTktMjY2LjExLTEzOS43NywyNjYuMTFoLTEwOS4wOGwtMzQuNS0zODMuNThoMTQyLjA3bDE2LjA1LDI0OC41MiwxMzguNDEtMjQ4LjUyaDY1Ljk3bDMxLjE2LDI1MC42OCwxMjYuOS0yNTAuNjhoNTkuMTlaIi8+CiAgICA8L2NsaXBQYXRoPgogIDwvZGVmcz4KICA8Y2lyY2xlIGNsYXNzPSJjbHMtOCIgY3g9IjI5NS44IiBjeT0iMjUwLjgiIHI9IjI1MC44Ii8+CiAgPHBhdGggY2xhc3M9ImNscy03IiBkPSJNNTM4LjkxLDI0My4xMWMwLTU1LjIyLTQ0LjQxLTEwMy43Ny0xMTEuNDctMTMxLjY0QzM5OS41Niw0NC40MSwzNTEuMDIsMCwyOTUuOCwwcy0xMDMuNzcsNDQuNDEtMTMxLjY0LDExMS40N2MtNjcuMDcsMjcuODctMTExLjQ3LDc2LjQxLTExMS40NywxMzEuNjRzNDQuNDEsMTAzLjc3LDExMS40NywxMzEuNjRjMjcuODcsNjcuMDcsNzYuNDEsMTExLjQ3LDEzMS42NCwxMTEuNDdzMTAzLjc3LTQ0LjQxLDEzMS42NC0xMTEuNDdjNjcuMDctMjcuODcsMTExLjQ3LTc2LjQxLDExMS40Ny0xMzEuNjRaTTI5Ny45Miw5LjE5YzI5LjE4LDAsNTUuMjQsMzMuMDUsNzIuNDIsODQuODctMjMuNDktNC44Ny00OC41NC03LjUxLTc0LjU0LTcuNTEtMjQuMzQsMC00Ny44MywyLjMxLTcwLDYuNiwxNy4xOS01MS4yOSw0My4xMS04My45Niw3Mi4xMi04My45NlpNMzkxLjYzLDI0MS41MWMwLDMwLjI5LTIuMzQsNTkuMjItNi42LDg1Ljc2LTI3LjkxLDQuNzktNTguNjEsNy40NC05MC44NCw3LjQ0LTI5LjMyLDAtNTcuMzctMi4yLTgzLjItNi4yLTQuMzgtMjYuODctNi44LTU2LjIzLTYuOC04N3MyLjQ4LTYwLjkxLDYuOTgtODguMDdjMjUuNzgtMy45OCw1My43Ny02LjE3LDgzLjAyLTYuMTcsMzIuMTcsMCw2Mi44MSwyLjY0LDkwLjY3LDcuNDEsNC4zNiwyNi44Myw2Ljc3LDU2LjEzLDYuNzcsODYuODNaTTYxLjg4LDI0MC45OWMwLTI5LjE4LDMzLjA1LTU1LjI0LDg0Ljg3LTcyLjQyLTQuODcsMjMuNDktNy41MSw0OC41NC03LjUxLDc0LjU1LDAsMjQuMzQsMi4zMSw0Ny44Myw2LjYsNzAtNTEuMjktMTcuMTktODMuOTYtNDMuMTEtODMuOTYtNzIuMTJaTTI5Ny45Miw0NzMuODNjLTI4LjM1LDAtNTMuNzctMzEuMjItNzAuOTUtODAuNTQsMjEuODMsNC4xNCw0NC45Miw2LjM3LDY4LjgzLDYuMzcsMjUuNTcsMCw1MC4yMi0yLjU1LDczLjM4LTcuMjYtMTcuMTksNDkuODMtNDIuNzMsODEuNDMtNzEuMjUsODEuNDNaTTQ0NS4wOSwxNjkuNzRjNDkuODMsMTcuMTksODEuNDMsNDIuNzMsODEuNDMsNzEuMjVzLTMxLjIyLDUzLjc3LTgwLjU0LDcwLjk1YzQuMTQtMjEuODMsNi4zNy00NC45Miw2LjM3LTY4LjgzLDAtMjUuNTctMi41NS01MC4yMi03LjI2LTczLjM4WiIvPgogIDxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTEyMDIuNTEsNDAuMzFsLTE3My4xNywzODMuNThoLTE0MS4xNGwtMzAuOTUtMjY2LjExLTEzOC43MSwyNjYuMTFoLTcyLjVsLTM0LjI0LTM4My41OGgxMDUuMjRsMTUuOTMsMjQ4LjUyLDEzNy4zNy0yNDguNTJoNjUuNDhsMzAuOTMsMjUwLjY4LDEyNS45NC0yNTAuNjhoMTA5Ljg0WiIvPgogIDxnPgogICAgPHBhdGggY2xhc3M9ImNscy01IiBkPSJNMTc3OS44MSw0MC45NWwtMjAzLjUzLDM4My41OGgtNjEuNjlsLTMxLjE5LTI2Ni4xMS0xMzkuNzcsMjY2LjExaC0xMDkuMDhsLTM0LjUtMzgzLjU4aDE0Mi4wN2wxNi4wNSwyNDguNTIsMTM4LjQxLTI0OC41Mmg2NS45N2wzMS4xNiwyNTAuNjgsMTI2LjktMjUwLjY4aDU5LjE5WiIvPgogICAgPGcgY2xhc3M9ImNscy05Ij4KICAgICAgPGxpbmUgY2xhc3M9ImNscy00IiB4MT0iMTIxNS4yIiB5MT0iMTk5LjE5IiB4Mj0iMTc3OS4xMSIgeTI9IjE5OS4xOSIvPgogICAgICA8bGluZSBjbGFzcz0iY2xzLTQiIHgxPSIxMjMwLjAyIiB5MT0iMTUyLjczIiB4Mj0iMTc3OS4xMSIgeTI9IjE1Mi43MyIvPgogICAgICA8bGluZSBjbGFzcz0iY2xzLTQiIHgxPSIxMjU4LjkiIHkxPSIxMDYuMjYiIHgyPSIxNzc5LjExIiB5Mj0iMTA2LjI2Ii8+CiAgICAgIDxsaW5lIGNsYXNzPSJjbHMtNCIgeDE9IjEyMzYuMDgiIHkxPSI1OS43OSIgeDI9IjE3NzkuMTEiIHkyPSI1OS43OSIvPgogICAgICA8bGluZSBjbGFzcz0iY2xzLTQiIHgxPSIxMjIwLjQ1IiB5MT0iMjQ1LjY2IiB4Mj0iMTc3OS4xMSIgeTI9IjI0NS42NiIvPgogICAgICA8bGluZSBjbGFzcz0iY2xzLTQiIHgxPSIxMjIwLjQ1IiB5MT0iMjQ1LjY2IiB4Mj0iMTc3OS4xMSIgeTI9IjI0NS42NiIvPgogICAgICA8bGluZSBjbGFzcz0iY2xzLTQiIHgxPSIxMjIwLjQ1IiB5MT0iMjkyLjEyIiB4Mj0iMTc3OS4xMSIgeTI9IjI5Mi4xMiIvPgogICAgICA8bGluZSBjbGFzcz0iY2xzLTQiIHgxPSIxMjIwLjQ1IiB5MT0iMjkyLjEyIiB4Mj0iMTc3OS4xMSIgeTI9IjI5Mi4xMiIvPgogICAgICA8bGluZSBjbGFzcz0iY2xzLTQiIHgxPSIxMjIwLjQ1IiB5MT0iMzM4LjU5IiB4Mj0iMTc3OS4xMSIgeTI9IjMzOC41OSIvPgogICAgICA8bGluZSBjbGFzcz0iY2xzLTQiIHgxPSIxMjIwLjQ1IiB5MT0iMzM4LjU5IiB4Mj0iMTc3OS4xMSIgeTI9IjMzOC41OSIvPgogICAgICA8bGluZSBjbGFzcz0iY2xzLTQiIHgxPSIxMjIwLjQ1IiB5MT0iMzg1LjA1IiB4Mj0iMTc3OS4xMSIgeTI9IjM4NS4wNSIvPgogICAgPC9nPgogIDwvZz4KICA8cGF0aCBjbGFzcz0iY2xzLTUiIGQ9Ik0xMjgwLjk2LDQyNC41M2wtMzAuNzgtLjA5LTg1LjkyLS4yMS0xMjIuMDUtLjMxLTIwLjktLjA1LDQuNTgtOS40NCw1Ni43LTExNi42OCw4Ljc3LTE4LjA1LDMxLjY3LTY1LjE4Ljk4LTEuOTksNTcuNDQtMTE4LjIyLDguOTktMTguNDgsMTcuMjYtMzUuNTMsNDYuNy42MywyLjQ5LDM1LjkxLDEuNTYsMjIuNjUsNC4yOSw2MS45NWMtLjQzLjM0LS44Ni43LTEuMjksMS4wNS0xMi4yOCwxMC4xMS0yMy42MSwxNS4yMy00NS40LDMxLjRsNTUuNTUsOTUuNDgsOS4zNSwxMzUuMTZaIi8+CiAgPHBhdGggY2xhc3M9ImNscy03IiBkPSJNMTMwMy44OCwzMzkuODVjMTAuMTctMTkuNDksOS4wOS0xNy44NCwxNi45Ny0yNC41LDQuMDMtMy44Myw1LjgtNC42MywxMC4xOS04LjM2di00NS4yMmMtNi4zNiw1LjEtOC40OCw1LjY2LTE1LjQyLDEzLjNxLTE2LjgzLDE4LjUzLTMxLjY5LDM1LjVsLTEyLjMyLTIxLjE5LTU1LjU1LTk1LjQ4YzIxLjc5LTE2LjE2LDMzLjExLTIxLjI5LDQ1LjQtMzEuNC40My0uMzQuODYtLjcsMS4yOS0xLjA1LDEyLjg4LTEwLjQ3LDI2LjQtMTkuMTUsMzcuMDQtMzYuODcsOC41MS0xNC4xNywxMy4zLTQ1LjA5LDcuOTEtNTkuNjctMy45NS0xMC43Ni04LjEtMTkuMjItMjMuMzMtMjYuNzMtMTUuMjItNy41MS0yMy4zMy0xMi43My03NC42My0xMC41My0zMC4wOCwwLTU4Ljc4LDE0LjE1LTc2LjI2LDMxLjMzLTMwLjY5LDMwLjExLTMzLjgyLDY0LjY4LTMwLjU2LDg5LjY2LDIuMDYsMTUuNzIsNS4yMiwyNC45OCwxMC43NiwzNy42MSw1LjcsMTMuMDQsNy4yMiwxNy4yMywxMC4zNSwyNi4zLjEyLjM4LjI2Ljc1LjM5LDEuMTUtLjQ2LjI3LS45My41Ny0xLjM3Ljg0LTU1LjA3LDMzLjg3LTEwMy40NCw2My41OC0xMTcuNDIsMTA2Ljg1LTYuNzksMjEtNy45MywzNS4xNC00LjM3LDU0LjM5LDIuNDQsMTMuMTIsMTIuMDMsMjguMzksMjQuNjUsMzguNjcsNS4wNCw0LjEyLDEwLjU3LDcuNDMsMTYuMzIsOS40OSwzLjAyLDEuMSw2LjExLDEuODQsOS4yMSwyLjE4LDQ3LjI1LDUuMSw0MC4wOCw1LjEsNjkuMDIsNS4xLDE4LjA1LDAsMzEuNjktMi41Nyw0My44Mi02Ljk3LDIxLjIyLTcuNjksMzcuODMtMjAuOSw2NS4zNy0zNS41bDIwLjU1LDM1LjcsMS41MSwyLjY0aDEwNS42NWwtNTMuNDYtODcuMjRaTTExOTAuNDQsNzUuODVjMS40Ni0xLjI0LDIuOTUtMi4yOCw0LjM5LTMuNTksMTUuODQtMTQuNDEsMzEuNDMtMTQuNDEsMzkuMzItMTQuNDFzMTkuMiwxMC44NCwyMi43MywxOS4wMWMuMTcuMzYuMzEuNzIuNDMsMS4wNiwxLjgsNS4xLDEuODksMTMuODMsMS4xMywyMS41OC0uNTMsNS41OS0xLjQ4LDEwLjY3LTIuNTIsMTMuNDgtMy4yNCw4Ljg0LTIwLjI4LDMxLjg4LTI2LjMsMzcuMzUtMTIuNzYsMTEuNTgtMTguOCwxMy40OS0yNS43MywxOC45NC05LjQtOS4wMi0xMC40NS0xNS4yLTE2Ljk3LTMyLjUzLTUuMjgtMTMuOTgtOC4wMy0yMC43Mi02LjM4LTM1LjkxLjI2LTIuNC41Ny00LjU2LjkxLTYuNTIsMi4wNC0xMS40Myw1LjQ0LTE1LjQ5LDguOTktMTguNDhaTTExNzYuMTcsMzgzLjY5Yy0xMy41NCw1LjA4LTIyLjYzLDYuNTctNDguMDksMy40LTE0Ljk4LTcuMDctMjMuNzYtMTEuNjgtMzMuOTQtMjQuMzMtNC43NC02LjY2LTEzLjA2LTI0Ljg2LTEzLjg2LTQzLjU2LS4zMy03LjM5LjQxLTE0LjYzLDIuMzItMjEuNDMsMS43Ny02LjMxLDQuNTUtMTIuMjcsOC40NC0xNy42LjEtLjE0LjIxLS4yOS4zMy0uNDUsOC4yNy0xMS4xMywyNy45Ny0yOS44LDQ1Ljc3LTQwLjU3bDc4LjA2LDEyMy4zNGMtOC42NSw5LjAyLTI1LjQ5LDE2LjEzLTM5LjAzLDIxLjIxWiIvPgogIDx0ZXh0IGNsYXNzPSJjbHMtMiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoODYuNjMgNjI4LjgzKSI+PHRzcGFuIHRleHRMZW5ndGg9IjIwNC40NyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiBjbGFzcz0iY2xzLTMiIHg9IjAiIHk9IjAiPldpPC90c3Bhbj48dHNwYW4gdGV4dExlbmd0aD0iNTcuMTciIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgY2xhc3M9ImNscy02IiB4PSIyMDQuNDciIHk9IjAiPnI8L3RzcGFuPjx0c3BhbiB0ZXh0TGVuZ3RoPSI0NjAuODUiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgY2xhc3M9ImNscy0zIiB4PSIyNjEuNjQiIHk9IjAiPmUgJmFtcDsgV2k8L3RzcGFuPjx0c3BhbiB0ZXh0TGVuZ3RoPSI1Ny4xNyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiBjbGFzcz0iY2xzLTYiIHg9IjcyMi40OSIgeT0iMCI+cjwvdHNwYW4+PHRzcGFuIHRleHRMZW5ndGg9IjQ0Mi44OCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiBjbGFzcz0iY2xzLTExIiB4PSI3NzkuNjYiIHk9IjAiPmVsZXNzIEM8L3RzcGFuPjx0c3BhbiB0ZXh0TGVuZ3RoPSI3My40NSIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiBjbGFzcz0iY2xzLTEwIiB4PSIxMjIyLjU0IiB5PSIwIj5vPC90c3Bhbj48dHNwYW4gdGV4dExlbmd0aD0iMzYwIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmdBbmRHbHlwaHMiIGNsYXNzPSJjbHMtMyIgeD0iMTI5NS45OSIgeT0iMCI+LiwgTHRkLjwvdHNwYW4+PC90ZXh0Pgo8L3N2Zz4='}];
+S.lib=DEF.concat(S.lib.filter(l=>!l.def));
+let uid=0,busy=false;
+const mk=()=>({id:++uid,photo:'',fit:false,cont:false,desc:'',equip:'',serial:''});
+for(let i=0;i<4;i++)S.items.push(mk());
+const $=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const say=t=>$('#msg').textContent=t||'';
+const val=(i,k)=>{const it=S.items[i];return(it.cont&&i>0)?val(i-1,k):it[k];};
+
+function shrink(file,max,alpha){return new Promise((ok,no)=>{
+  const u=URL.createObjectURL(file),im=new Image();
+  im.onload=()=>{const r=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');
+    c.width=Math.round(im.width*r);c.height=Math.round(im.height*r);
+    const x=c.getContext('2d');if(!alpha){x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);}
+    x.drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);
+    ok(alpha?c.toDataURL('image/png'):c.toDataURL('image/jpeg',.85));};
+  im.onerror=()=>no(new Error('load'));im.src=u;});}
+
+/* ---------- logos ---------- */
+const saveLib=()=>{try{localStorage.setItem(LK,JSON.stringify(S.lib.filter(l=>!l.def)));}catch(_){say('เก็บโลโก้ลงเครื่องไม่ได้ ใช้ได้เฉพาะรอบนี้');}};
+function renderLogos(){
+  $('#lib').innerHTML=S.lib.length?S.lib.map(l=>`<div class="li" data-id="${l.id}"><img src="${l.src}" alt=""><span>${esc(l.name)}${l.def?' (ค่าเริ่มต้น)':''}</span>${l.def?'':'<button class="btn del" type="button" data-a="ldel">ลบ</button>'}</div>`).join(''):'<div class="hint" style="margin:0">ยังไม่มีโลโก้ในคลัง</div>';
+  $('#slots').innerHTML=S.slots.map((s,i)=>{const l=S.lib.find(x=>x.id===s.lid);return `<div class="slot" data-i="${i}">
+    <div class="ch"><b>โลโก้ ${i+1}</b>${S.slots.length>1?'<button class="btn del" type="button" data-a="rm">ลบช่อง</button>':''}</div>
+    <select data-a="sel"><option value="">— ไม่ใช้ —</option>${S.lib.map(x=>`<option value="${x.id}" ${x.id===s.lid?'selected':''}>${esc(x.name)}</option>`).join('')}</select>
+    <div class="logo-prev">${l?`<img src="${l.src}" alt="">`:'<span>ยังไม่ได้เลือก</span>'}</div>
+    <div class="row"><label class="chk"><input type="radio" name="pos${i}" data-a="pos" value="L" ${s.pos==='L'?'checked':''}> มุมซ้ายบน</label><label class="chk"><input type="radio" name="pos${i}" data-a="pos" value="R" ${s.pos==='R'?'checked':''}> มุมขวาบน</label></div></div>`;}).join('');
+  $('#addSlot').style.display=S.slots.length>=4?'none':'';
+}
+$('#libIn').onchange=async e=>{
+  for(const f of e.target.files){try{
+    const src=await shrink(f,700,true),l={id:'l'+Date.now()+Math.random().toString(36).slice(2,6),name:f.name.replace(/\.[^.]+$/,''),src};
+    S.lib.push(l);const empty=S.slots.find(s=>!s.lid);if(empty)empty.lid=l.id;
+  }catch(_){say('โหลดโลโก้ไม่สำเร็จ');}}
+  saveLib();renderLogos();e.target.value='';};
+$('#lib').onclick=e=>{if(e.target.dataset.a!=='ldel')return;const id=e.target.closest('.li').dataset.id;
+  S.lib=S.lib.filter(x=>x.id!==id);S.slots.forEach(s=>{if(s.lid===id)s.lid='';});saveLib();renderLogos();};
+$('#slots').onchange=e=>{const a=e.target.dataset.a,i=+e.target.closest('.slot').dataset.i;
+  if(a==='sel'){S.slots[i].lid=e.target.value;renderLogos();}
+  if(a==='pos')S.slots[i].pos=e.target.value;};
+$('#slots').onclick=e=>{if(e.target.dataset.a!=='rm')return;S.slots.splice(+e.target.closest('.slot').dataset.i,1);renderLogos();};
+$('#addSlot').onclick=()=>{S.slots.push({lid:'',pos:S.slots.some(s=>s.pos==='L')?'R':'L'});renderLogos();};
+
+document.querySelectorAll('[data-h]').forEach(i=>{i.value=S.h[i.dataset.h];i.oninput=()=>S.h[i.dataset.h]=i.value;});
+
+/* ---------- photo cards ---------- */
+function render(){
+  $('#items').innerHTML=S.items.map((it,n)=>{const c=it.cont&&n>0;return `
+  <div class="card" data-id="${it.id}">
+    <div class="ch"><b>รูปที่ ${n+1}</b><button class="btn del" type="button" data-a="del">ลบ</button></div>
+    <div class="ph ${it.photo?'has':''}" ${it.photo?`style="background-image:url(${it.photo});background-size:${it.fit?'100% 100%':'contain'}"`:''}>ยังไม่มีรูป</div>
+    <div class="row">
+      <label class="btn">ถ่ายรูป<input type="file" accept="image/*" capture="environment" data-a="ph"></label>
+      <label class="btn">เลือกจากคลัง<input type="file" accept="image/*" data-a="ph"></label>
+    </div>
+    <label class="chk"><input type="checkbox" data-a="fit" ${it.fit?'checked':''}> ยืดรูปให้เต็มกรอบ (ปกติ: พอดีกรอบ ไม่ตัดภาพ)</label>
+    ${n?`<label class="chk"><input type="checkbox" data-a="cont" ${c?'checked':''}> ใช้ข้อมูลต่อเนื่องจากรูปก่อนหน้า</label>`:''}
+    <label>Description</label><input type="text" data-k="desc" value="${esc(val(n,'desc'))}" ${c?'disabled':''}>
+    <label>Equipment ID</label><input type="text" data-k="equip" value="${esc(val(n,'equip'))}" ${c?'disabled':''}>
+    <label>Serial Number</label><input type="text" data-k="serial" value="${esc(val(n,'serial'))}" ${c?'disabled':''}>
+  </div>`;}).join('');
+}
+function syncCont(){document.querySelectorAll('#items .card').forEach((c,i)=>c.querySelectorAll('[data-k]').forEach(inp=>{
+  const v=val(i,inp.dataset.k);if(inp.value!==v)inp.value=v;}));}
+const find=el=>S.items.find(i=>i.id==el.closest('.card').dataset.id);
+$('#items').addEventListener('input',e=>{const k=e.target.dataset.k;if(k){find(e.target)[k]=e.target.value;syncCont();}});
+$('#items').addEventListener('change',async e=>{
+  const a=e.target.dataset.a,it=find(e.target);
+  if(a==='ph'){const f=e.target.files[0];if(!f)return;try{it.photo=await shrink(f,1600,false);render();}catch(_){say('โหลดรูปไม่สำเร็จ');}}
+  if(a==='fit'){it.fit=e.target.checked;render();}
+  if(a==='cont'){it.cont=e.target.checked;render();}});
+$('#items').addEventListener('click',e=>{
+  if(e.target.dataset.a!=='del')return;const it=find(e.target),i=S.items.indexOf(it),nx=S.items[i+1];
+  if(i===0&&nx&&nx.cont){F.forEach(k=>nx[k]=val(0,k));nx.cont=false;}
+  if(S.items.length>1)S.items.splice(i,1);else S.items[0]=mk();render();});
+$('#add').onclick=()=>{S.items.push(mk());render();window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});};
+
+/* ---------- PDF page ---------- */
+function pageHTML(chunk,base){
+  const P=(c,l,t,w,h,inner,st)=>`<div class="${c}" style="left:${l}px;top:${t}px;width:${w}px;height:${h}px;${st||''}">${inner||''}</div>`;
+  let o='';
+  const lg=S.slots.map(s=>({s,l:S.lib.find(x=>x.id===s.lid)})).filter(a=>a.l);
+  const put=(arr,x0,total,single,side)=>{const n=arr.length;if(!n)return;const w=n===1?single:(total-(n-1)*14)/n;
+    arr.forEach((a,k)=>{o+=P('lg',x0+k*(w+14),28,w,44,'',`background:url(${a.l.src}) ${side} center/contain no-repeat`);});};
+  put(lg.filter(a=>a.s.pos==='L'),45,375,300,'left');
+  put(lg.filter(a=>a.s.pos==='R'),650,250,250,'right');
+  o+=P('tt',335,36,400,36,esc(S.h.title));
+  [[89,'Project',S.h.project,'Station',S.h.station],[124,'System',S.h.system,'Location',S.h.location]].forEach(r=>{
+    o+=P('lb',40,r[0],122,34,r[1]+' :')+P('vl h',167,r[0],286,34,esc(r[2]))+P('lb',480,r[0],128,34,r[3]+' :')+P('vl h',612,r[0],288,34,esc(r[4]));});
+  chunk.forEach((it,k)=>{
+    const c=k%2,x=[30,477][c],y=[168,713][k>>1],w=c?424:425,n=base+k;
+    o+=P('ph',x+2,y+2,w-4,415,'',it.photo?`background:url(${it.photo}) center/${it.fit?'100% 100%':'contain'} no-repeat`:'');
+    o+=P('fr',x,y,w,419,'','border:2px solid #000');
+    [['Description','desc'],['Equipment ID','equip'],['Serial Number','serial']].forEach((q,i)=>{
+      const t=Math.round(y+419+i*34.4);
+      o+=P('lb n',x,t,127,34,q[0]+' :')+P('vl c',x+133,t,w-134,34,esc(val(n,q[1])));});
+  });
+  return `<div class="pg">${o}</div>`;}
+
+/* ---------- export ---------- */
+function resetModal(){$('#mRow1').hidden=false;$('#mRow2').hidden=true;}
+function showResult(blob,fn){
+  const file=new File([blob],fn,{type:'application/pdf'});
+  let can=false;try{can=!!(navigator.canShare&&navigator.share&&navigator.canShare({files:[file]}));}catch(_){}
+  $('#mRow1').hidden=true;$('#mRow2').hidden=false;$('#mShare').style.display=can?'':'none';
+  $('#mmsg').textContent='สร้าง '+fn+' เรียบร้อย กดปุ่มด้านล่างเพื่อบันทึก';
+  $('#mShare').onclick=async()=>{try{await navigator.share({files:[file],title:fn});$('#modal').hidden=true;resetModal();say('ส่งไฟล์ '+fn+' แล้ว');}
+    catch(e){if(!e||e.name!=='AbortError')$('#mmsg').textContent='แชร์ไม่สำเร็จ ลองกด "ดาวน์โหลด" แทน';}};
+  $('#mDl').onclick=()=>{const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=fn;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(u),60000);$('#mmsg').textContent='สั่งดาวน์โหลดแล้ว ตรวจสอบในโฟลเดอร์ Downloads หรือแถบดาวน์โหลดของเบราว์เซอร์ ถ้าไม่พบให้เปิดลิงก์ใน Chrome/Safari';};
+  $('#mClose').onclick=()=>{$('#modal').hidden=true;resetModal();};
+}
+const clean=v=>v.trim().replace(/\.pdf$/i,'').replace(/[\\/:*?"<>|]+/g,'_');
+const defName=()=>clean(['Photo_Report',S.h.station,S.h.location].filter(Boolean).join('_').replace(/\s+/g,'_'));
+async function getDl(){try{if(window.claude)return await claude.use('downloads');}catch(_){}
+  return{save:async o=>{const u=URL.createObjectURL(o.data),a=document.createElement('a');a.href=u;a.download=o.filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000);}};}
+$('#exp').onclick=async()=>{
+  if(!(await getDl())){say('ฟังก์ชันดาวน์โหลดใช้ไม่ได้ในมุมมองนี้ ลองเปิดผ่าน claude.ai');return;}
+  say('');resetModal();$('#fname').value=defName();$('#mmsg').textContent='';$('#modal').hidden=false;
+  setTimeout(()=>{$('#fname').focus();$('#fname').select();},60);};
+$('#mCancel').onclick=()=>{if(!busy)$('#modal').hidden=true;};
+$('#fname').onkeydown=e=>{if(e.key==='Enter')$('#mOk').click();};
+$('#mOk').onclick=async()=>{
+  if(busy)return;const mm=$('#mmsg');
+  const name=clean($('#fname').value)||defName();
+  if(!window.html2canvas||!window.jspdf){mm.textContent='โหลดไลบรารี PDF ไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่';return;}
+  busy=true;$('#mOk').disabled=$('#mCancel').disabled=true;
+  try{
+    const dl=await getDl();if(!dl)throw{message:'ดาวน์โหลดใช้ไม่ได้ในมุมมองนี้'};
+    try{await document.fonts.ready;}catch(_){}
+    const chunks=[];for(let i=0;i<S.items.length;i+=4)chunks.push(S.items.slice(i,i+4));
+    const stage=$('#stage'),pdf=new window.jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
+    for(let i=0;i<chunks.length;i++){
+      mm.textContent='กำลังสร้างหน้า '+(i+1)+'/'+chunks.length+'...';
+      stage.innerHTML=pageHTML(chunks[i],i*4);
+      await new Promise(r=>setTimeout(r,80));
+      const cv=await html2canvas(stage.firstElementChild,{scale:2,backgroundColor:'#fff',useCORS:true});
+      if(i)pdf.addPage();
+      pdf.addImage(cv.toDataURL('image/jpeg',.92),'JPEG',0,0,210,297);
+    }
+    stage.innerHTML='';
+    const blob=pdf.output('blob');
+    if(window.claude){mm.textContent='กำลังบันทึก...';await dl.save({filename:name+'.pdf',data:blob});$('#modal').hidden=true;say('บันทึก '+name+'.pdf เรียบร้อย');}
+    else showResult(blob,name+'.pdf');
+  }catch(err){
+    mm.textContent=err&&err.code==='declined'?'ยกเลิกการบันทึก แก้ชื่อแล้วกดบันทึกใหม่ได้':'สร้าง PDF ไม่สำเร็จ: '+((err&&err.message)||'ลองใหม่อีกครั้ง');
+  }finally{busy=false;$('#mOk').disabled=$('#mCancel').disabled=false;}
+};
+renderLogos();render();
+if(!window.claude&&/Line\/|FBAN|FBAV|Instagram|MicroMessenger|; wv\)/i.test(navigator.userAgent)){$('#inapp').hidden=false;
+  $('#cpLink').onclick=async()=>{try{await navigator.clipboard.writeText(location.href);$('#cpLink').textContent='คัดลอกแล้ว';}catch(_){$('#cpLink').textContent=location.href;}};}
+/* แปลงโลโก้เริ่มต้น (SVG) เป็น PNG เพื่อให้ตัวอย่างและ PDF แสดงผลตรงกัน */
+DEF.forEach(l=>{const im=new Image();im.onload=()=>{try{const c=document.createElement('canvas');
+  c.width=1600;c.height=Math.round(1600*(im.naturalHeight||833)/(im.naturalWidth||1780));
+  c.getContext('2d').drawImage(im,0,0,c.width,c.height);l.src=c.toDataURL('image/png');renderLogos();}catch(_){}};im.src=l.src;});
+</script>
+</body>
+</html>
